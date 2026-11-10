@@ -1,0 +1,64 @@
+#!/bin/bash
+
+F="addressbook.txt"
+
+while true
+do
+    echo "1.Create  2.View  3.Insert  4.Delete  5.Modify  6.Exit"
+    read -p "Choice: " c
+
+    case $c in
+    1)
+        > "$F"
+        echo "Address Book Created"
+        ;;
+
+    2)
+        if [ -s "$F" ]; then
+            cat "$F"
+        else
+            echo "Address Book Empty"
+        fi
+        ;;
+
+    3)
+        read -p "Name: " n
+        read -p "Phone: " p
+        read -p "Email: " e
+        echo "$n | $p | $e" >> "$F"
+        echo "Record Inserted"
+        ;;
+
+    4)
+        read -p "Name to delete: " n
+        if grep -q "^$n |" "$F"; then
+            grep -v "^$n |" "$F" > temp
+            mv temp "$F"
+            echo "Record Deleted"
+        else
+            echo "Record Not Found"
+        fi
+        ;;
+
+    5)
+        read -p "Name to modify: " n
+        if grep -q "^$n |" "$F"; then
+            read -p "New Phone: " p
+            read -p "New Email: " e
+            sed -i "s/^$n |.*/$n | $p | $e/" "$F"
+            echo "Record Updated"
+        else
+            echo "Record Not Found"
+        fi
+        ;;
+
+    6)
+        echo "Exiting..."
+        exit
+        ;;
+
+    *)
+        echo "Invalid Choice"
+        ;;
+    esac
+done
