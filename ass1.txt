@@ -37,7 +37,9 @@ do
         read -p "Name: " n
         read -p "Phone: " p
         read -p "Email: " e
-        sed -i "s/^$n .*/$n $p $e/" $F
+        grep -v "^$n " $F > temp
+        echo "$n $p $e" >> temp
+        mv temp $F
         echo "Updated"
         ;;
 
